@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 export default function Home() {
   const [kp, setKp] = useState<number | null>(null);
   const [visibility, setVisibility] = useState("Loading...");
+  const [visibilityColor, setVisibilityColor] = useState("text-gray-400");
   const [updated, setUpdated] = useState("");
 
   useEffect(() => {
@@ -24,6 +25,9 @@ export default function Home() {
     else if (kpValue >= 5) setVisibility("Good chance in northern US");
     else if (kpValue >= 4) setVisibility("Possible in northern states");
     else setVisibility("Mostly northern latitudes");
+    if (kpValue >= 6) setVisibilityColor("text-green-400");
+        else if (kpValue >= 4) setVisibilityColor("text-yellow-400");
+    else setVisibilityColor("text-gray-400");
 
     setUpdated(new Date().toLocaleTimeString());
   }
@@ -63,9 +67,9 @@ export default function Home() {
 
           <div className="bg-gray-900 p-6 rounded-xl">
             <p className="text-gray-400 text-sm">Aurora Visibility</p>
-            <p className="text-2xl font-semibold mt-2">
-              {visibility}
-            </p>
+            <p className={`text-2xl font-semibold mt-2 ${visibilityColor}`}>
+ 		 {visibility}
+	    </p>
           </div>
 
           <div className="bg-gray-900 p-6 rounded-xl">
