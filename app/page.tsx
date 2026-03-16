@@ -41,14 +41,17 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-black text-white flex items-center justify-center">
       <div className="text-center max-w-3xl px-6">
+	<p className="text-lg text-gray-400 mb-2">
+		Live Aurora Forecast
+	</p>
 
-        <h1 className="text-6xl font-bold mb-6">
-          Aurora Tonight
-        </h1>
+	<h1 className="text-6xl font-bold mb-6">
+  		Aurora Tonight
+	</h1>
 
-        <p className="text-xl text-gray-300 mb-10">
-          Can you see the Northern Lights tonight?
-        </p>
+	<p className="text-xl text-gray-300 mb-10">
+  		Real-time aurora forecast based on NOAA space weather data.
+	</p>
 
         <div className="grid grid-cols-3 gap-6">
 
