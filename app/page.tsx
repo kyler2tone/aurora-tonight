@@ -8,30 +8,33 @@ export default function Home() {
   const [updated, setUpdated] = useState("");
 
   useEffect(() => {
-    async function fetchAurora() {
-      const res = await fetch(
-        "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json"
-      );
+  async function fetchAurora() {
+    const res = await fetch(
+      "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json"
+    );
 
-      const data = await res.json();
+    const data = await res.json();
+    const latest = data[data.length - 1];
+    const kpValue = parseFloat(latest[1]);
 
-      // latest KP value is last row
-      const latest = data[data.length - 1];
-      const kpValue = parseFloat(latest[1]);
+    setKp(kpValue);
 
-      setKp(kpValue);
+    if (kpValue >= 7) setVisibility("Aurora likely visible far south");
+    else if (kpValue >= 6) setVisibility("Strong aurora activity");
+    else if (kpValue >= 5) setVisibility("Good chance in northern US");
+    else if (kpValue >= 4) setVisibility("Possible in northern states");
+    else setVisibility("Mostly northern latitudes");
 
-      if (kpValue >= 7) setVisibility("Aurora likely visible far south");
-      else if (kpValue >= 6) setVisibility("Strong aurora activity");
-      else if (kpValue >= 5) setVisibility("Good chance in northern US");
-      else if (kpValue >= 4) setVisibility("Possible in northern states");
-      else setVisibility("Mostly northern latitudes");
+    setUpdated(new Date().toLocaleTimeString());
+  }
 
-      setUpdated(new Date().toLocaleTimeString());
-    }
+  fetchAurora();
 
-    fetchAurora();
-  }, []);
+  const interval = setInterval(fetchAurora, 300000);
+
+  return () => clearInterval(interval);
+
+}, []);
 
   return (
     <main className="min-h-screen bg-black text-white flex items-center justify-center">
