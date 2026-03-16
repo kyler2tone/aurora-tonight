@@ -1,78 +1,79 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
 export default function Home() {
-
-  const [strength, setStrength] = useState("Loading...")
-  const [visibility, setVisibility] = useState("Loading...")
-  const [updated, setUpdated] = useState("--:--")
+  const [kp, setKp] = useState<number | null>(null);
+  const [visibility, setVisibility] = useState("Loading...");
+  const [updated, setUpdated] = useState("");
 
   useEffect(() => {
-
-    async function getAurora() {
-
+    async function fetchAurora() {
       const res = await fetch(
-        "https://services.swpc.noaa.gov/json/ovation_aurora_latest.json"
-      )
+        "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json"
+      );
 
-      const data = await res.json()
+      const data = await res.json();
 
-      const avg =
-        data.coordinates
-          .map((c:any) => c[2])
-          .reduce((a:number,b:number)=>a+b,0) /
-        data.coordinates.length
+      // latest KP value is last row
+      const latest = data[data.length - 1];
+      const kpValue = parseFloat(latest[1]);
 
-      setStrength(avg.toFixed(1))
+      setKp(kpValue);
 
-      if (avg > 50) setVisibility("Very High")
-      else if (avg > 25) setVisibility("High")
-      else if (avg > 10) setVisibility("Moderate")
-      else setVisibility("Low")
+      if (kpValue >= 7) setVisibility("Aurora likely visible far south");
+      else if (kpValue >= 6) setVisibility("Strong aurora activity");
+      else if (kpValue >= 5) setVisibility("Good chance in northern US");
+      else if (kpValue >= 4) setVisibility("Possible in northern states");
+      else setVisibility("Mostly northern latitudes");
 
-      setUpdated(new Date().toLocaleTimeString())
+      setUpdated(new Date().toLocaleTimeString());
     }
 
-    getAurora()
-
-  }, [])
+    fetchAurora();
+  }, []);
 
   return (
     <main className="min-h-screen bg-black text-white flex items-center justify-center">
       <div className="text-center max-w-3xl px-6">
-	<p className="text-lg text-gray-400 mb-2">
-		Live Aurora Forecast
-	</p>
 
-	<h1 className="text-6xl font-bold mb-6">
-  		Aurora Tonight
-	</h1>
+        <p className="text-lg text-gray-400 mb-2">
+          Live Aurora Forecast
+        </p>
 
-	<p className="text-xl text-gray-300 mb-10">
-  		Real-time aurora forecast based on NOAA space weather data.
-	</p>
+        <h1 className="text-6xl font-bold mb-6">
+          Aurora Tonight
+        </h1>
 
-        <div className="grid grid-cols-3 gap-6">
+        <p className="text-xl text-gray-300 mb-10">
+          Can you see the Northern Lights tonight?
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
           <div className="bg-gray-900 p-6 rounded-xl">
-            <p className="text-gray-400 text-sm">Aurora Strength</p>
-            <p className="text-3xl font-semibold mt-2">{strength}</p>
+            <p className="text-gray-400 text-sm">Current KP Index</p>
+            <p className="text-3xl font-semibold mt-2">
+              {kp ?? "Loading"}
+            </p>
           </div>
 
           <div className="bg-gray-900 p-6 rounded-xl">
-            <p className="text-gray-400 text-sm">Visibility</p>
-            <p className="text-3xl font-semibold mt-2">{visibility}</p>
+            <p className="text-gray-400 text-sm">Aurora Visibility</p>
+            <p className="text-2xl font-semibold mt-2">
+              {visibility}
+            </p>
           </div>
 
           <div className="bg-gray-900 p-6 rounded-xl">
             <p className="text-gray-400 text-sm">Last Update</p>
-            <p className="text-3xl font-semibold mt-2">{updated}</p>
+            <p className="text-2xl font-semibold mt-2">
+              {updated}
+            </p>
           </div>
 
         </div>
-
       </div>
     </main>
-  )
+  );
 }
