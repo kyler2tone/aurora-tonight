@@ -42,7 +42,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-black text-white flex items-center justify-center">
-      <div className="text-center max-w-3xl px-6">
+      <div className="text-center max-w-5xl px-6">
 
         <p className="text-lg text-gray-400 mb-2">
           Live Aurora Forecast
@@ -78,8 +78,21 @@ export default function Home() {
               {updated}
             </p>
           </div>
-
         </div>
+
+	  <div className="mt-10 bg-gray-900 rounded-xl p-4">
+  <p className="text-gray-400 text-sm mb-4">Live Aurora Forecast Map</p>
+  <img
+    src="https://services.swpc.noaa.gov/images/animations/ovation/north/latest.jpg"
+    alt="Live aurora forecast map"
+    className="w-full max-w-4xl mx-auto rounded-lg"
+  />
+</div>
+
+<p className="text-gray-500 mt-4 text-sm text-center">
+  Data and forecast imagery provided by NOAA Space Weather Prediction Center.
+</p>
+
       </div>
     </main>
   );
